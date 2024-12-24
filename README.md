@@ -1,2 +1,3 @@
-# lingviz
+# LingViz
+
 Linguistic Visualizations

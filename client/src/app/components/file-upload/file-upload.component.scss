@@ -1,0 +1,19 @@
+#file-upload-wrapper {
+    margin: 10px;
+}
+
+.upload-btn {
+    background-color: lightblue;
+    height: 50px;
+    width: 50px;
+    border: none;
+    border-radius: 10px;
+
+    &:hover {
+        border: inset
+    }
+
+    &:active {
+        border: none
+    }
+}

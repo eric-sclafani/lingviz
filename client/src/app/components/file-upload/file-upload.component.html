@@ -1,0 +1,39 @@
+<section id="file-upload-wrapper">
+
+    <input
+        type="file"
+        class="file-input"
+        (change)="onFileSelected($event)"
+        [accept]="acceptedFileTypes"
+        #fileUpload
+        hidden>
+
+    <div class="file-upload">
+
+        {{ fileName || "No file uploaded yet."}}
+
+        <button class="upload-btn"
+            (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+        </button>
+
+    </div>
+
+    <div class="progress">
+
+        @if(uploadProgress){
+
+        <mat-progress-bar
+            class="progress-bar"
+            mode="determinate"
+            [value]="uploadProgress">
+
+        </mat-progress-bar>
+
+        <mat-icon class="cancel-upload"
+            (click)="cancelUpload()">delete_forever
+        </mat-icon>
+        }
+
+    </div>
+</section>
