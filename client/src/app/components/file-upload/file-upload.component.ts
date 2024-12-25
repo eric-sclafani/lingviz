@@ -1,16 +1,17 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { HttpEventType } from '@angular/common/http';
+import { finalize, Subscription } from 'rxjs';
+
 import { PythonApiService } from '../../services/python-api.service';
-import { finalize, Observable, Subscription } from 'rxjs';
-import { HttpEvent, HttpEventType } from '@angular/common/http';
+import { ProgressSpinnerComponent } from '../progress-spinner/progress-spinner.component';
 import DynamicResult from '../../models/dynamicResult';
 
 
 @Component({
     selector: 'file-upload',
-    imports: [MatIconModule, MatProgressSpinnerModule, FormsModule],
+    imports: [MatIconModule, FormsModule, ProgressSpinnerComponent],
     standalone: true,
     templateUrl: './file-upload.component.html',
     styleUrl: './file-upload.component.scss'
@@ -36,10 +37,18 @@ export class FileUploadComponent {
         }
     }
 
-    onSubmit(): void {
-        this.initUploadSubscription()
-        this.sendTextColName();
+    onSubmit(event: Event): void {
+        if (this.fileName != '') {
+            event.stopPropagation();
+            this.initFormSubscriptions();
+        }
 
+    }
+
+    cancelUpload(): void {
+        this.fileUploadSub?.unsubscribe();
+        this.fileName = '';
+        this.reset();
     }
 
     private sendTextColName(): void {
@@ -48,7 +57,7 @@ export class FileUploadComponent {
         })
     }
 
-    private initUploadSubscription(): void {
+    private initFormSubscriptions(): void {
 
         const upload$ = this._pythonApi.sendFile(this.fileForm).pipe(
             finalize(() => this.reset())
@@ -62,17 +71,10 @@ export class FileUploadComponent {
 
             if (event.type == HttpEventType.Response) {
                 this.fileUploadResponse = event.body as DynamicResult
+                this.sendTextColName();
                 console.log(this.fileUploadResponse)
             }
         })
-    }
-
-
-
-    cancelUpload(): void {
-        this.fileUploadSub?.unsubscribe();
-        this.fileName = '';
-        this.reset();
     }
 
     private reset(): void {

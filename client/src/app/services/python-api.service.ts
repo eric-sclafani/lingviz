@@ -12,8 +12,6 @@ export class PythonApiService {
     constructor(private _http: HttpClient) { }
 
     public sendFile(uploadedFile: FormData) {
-        // Specifying reportProgress and observe receives event objects 
-        // that report the progress of the HTTP request
         return this._http.post(this.apiUrl + 'file_upload/', uploadedFile, {
             reportProgress: true,
             observe: 'events'

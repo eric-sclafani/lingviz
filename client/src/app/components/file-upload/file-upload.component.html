@@ -5,6 +5,7 @@
         (change)="onFileSelected($event)"
         [accept]="acceptedFileTypes"
         #fileUpload
+        required
         hidden>
 
     <div class="file-upload">
@@ -24,23 +25,15 @@
         placeholder="Text column name"
         [(ngModel)]="textColumnName">
 
-    <button type="button" (click)="onSubmit()"> Submit </button>
+    <button type="button" (click)="onSubmit($event)"> Submit </button>
 
 </div>
 
-<div class="progress">
-
-    @if(fileUploadProgress){
-
-    <mat-progress-spinner
-        mode="determinate"
-        [value]="fileUploadProgress">
-
-    </mat-progress-spinner>
-
+@if(fileUploadProgress != null){
     <mat-icon class="cancel-upload"
         (click)="cancelUpload()">delete_forever
     </mat-icon>
-    }
 
-</div>
+}
+
+<progress-spinner [progressValue]="fileUploadProgress"></progress-spinner>

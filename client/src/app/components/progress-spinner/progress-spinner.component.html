@@ -1,0 +1,9 @@
+<div class="progress">
+
+    @if(progressValue()){
+        <mat-progress-spinner
+            mode="determinate"
+            [value]="progressValue()">
+        </mat-progress-spinner>
+    }
+</div>
