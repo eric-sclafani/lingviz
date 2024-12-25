@@ -1,5 +1,9 @@
 #file-upload-wrapper {
-    margin: 10px;
+    margin: 30px;
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    width: 200px;
 }
 
 .upload-btn {
@@ -10,10 +14,11 @@
     border-radius: 10px;
 
     &:hover {
-        border: inset
+        box-shadow: 2px 2px 1px 1px #2c6e81
     }
 
     &:active {
-        border: none
+        border: none;
+        box-shadow: none
     }
 }

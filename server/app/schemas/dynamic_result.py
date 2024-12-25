@@ -3,6 +3,6 @@ from typing import Any
 
 
 class DynamicResult(BaseModel):
-    succeed: bool
-    message: str
+    succeed: bool = True
+    message: str = ""
     data: Any = None

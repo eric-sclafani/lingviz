@@ -1,8 +1,7 @@
-<section id="file-upload-wrapper">
+<div id="file-upload-wrapper">
 
     <input
         type="file"
-        class="file-input"
         (change)="onFileSelected($event)"
         [accept]="acceptedFileTypes"
         #fileUpload
@@ -19,21 +18,29 @@
 
     </div>
 
-    <div class="progress">
+    <input
+        class="text-col-input"
+        type="text"
+        placeholder="Text column name"
+        [(ngModel)]="textColumnName">
 
-        @if(uploadProgress){
+    <button type="button" (click)="onSubmit()"> Submit </button>
 
-        <mat-progress-bar
-            class="progress-bar"
-            mode="determinate"
-            [value]="uploadProgress">
+</div>
 
-        </mat-progress-bar>
+<div class="progress">
 
-        <mat-icon class="cancel-upload"
-            (click)="cancelUpload()">delete_forever
-        </mat-icon>
-        }
+    @if(fileUploadProgress){
 
-    </div>
-</section>
+    <mat-progress-spinner
+        mode="determinate"
+        [value]="fileUploadProgress">
+
+    </mat-progress-spinner>
+
+    <mat-icon class="cancel-upload"
+        (click)="cancelUpload()">delete_forever
+    </mat-icon>
+    }
+
+</div>
