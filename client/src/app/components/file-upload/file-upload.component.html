@@ -8,32 +8,33 @@
         required
         hidden>
 
-    <div class="file-upload">
+    <div id="file-upload">
 
-        {{ fileName || "No file uploaded yet."}}
-
-        <button class="upload-btn"
-            (click)="fileUpload.click()">
-            <mat-icon>attach_file</mat-icon>
+        
+        <button id="upload-btn" (click)="fileUpload.click()">
+            <mat-icon>upload</mat-icon>
+            <strong>Upload File</strong>
         </button>
+        
+        <em>{{ fileName || "No file chosen."}}</em>
 
     </div>
 
     <input
         class="text-col-input"
         type="text"
-        placeholder="Text column name"
+        placeholder="Text field name"
         [(ngModel)]="textColumnName">
 
-    <button type="button" (click)="onSubmit($event)"> Submit </button>
+    <button type="button" id="submit-btn" (click)="onSubmit($event)"> Submit </button>
 
 </div>
 
 @if(fileUploadProgress != null){
     <mat-icon class="cancel-upload"
-        (click)="cancelUpload()">delete_forever
-    </mat-icon>
-
-}
+    (click)="cancelUpload()">delete_forever
+</mat-icon>
 
 <progress-spinner [progressValue]="fileUploadProgress"></progress-spinner>
+
+}

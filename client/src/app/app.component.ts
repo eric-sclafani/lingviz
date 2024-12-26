@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { PythonApiService } from './services/python-api.service';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
 
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, FileUploadComponent],
+    imports: [RouterOutlet],
     templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent {
 
-    constructor(private _pythonApi: PythonApiService) { }
+    constructor() { }
 
 
 }

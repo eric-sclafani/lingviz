@@ -1,24 +1,55 @@
 #file-upload-wrapper {
     margin: 30px;
     display: flex;
-    gap: 10px;
+    gap: 30px;
     flex-direction: column;
-    width: 200px;
+    align-items: center;
+    width: 400px;
 }
 
-.upload-btn {
+#upload-btn {
     background-color: lightblue;
-    height: 50px;
-    width: 50px;
     border: none;
-    border-radius: 10px;
+    border-radius: 15px;
+    display:flex;
+    align-items: center;
+    padding: 5px 15px;
+    cursor: pointer;
 
     &:hover {
-        box-shadow: 2px 2px 1px 1px #2c6e81
+        box-shadow: 2px 2px 1px 1px rgb(0,0,0,0.5)
     }
 
     &:active {
         border: none;
         box-shadow: none
     }
+}
+
+#submit-btn {
+    background-color: white;
+    border: outset .5px;
+    border-radius: 15px;
+    padding:12px 40px;
+    box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+
+    &:hover {
+        box-shadow: 3px 3px 5px rgba(0, 0, 0, 0.3);
+    }
+
+    &:active {
+        box-shadow: none;
+    }
+}
+
+#file-upload {
+    display:flex;
+    gap:10px;
+    align-items: center;
+    border: solid lightblue;
+    border-style: double;
+    border-radius: 15px;    
+    padding:10px
+
 }

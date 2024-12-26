@@ -55,3 +55,7 @@ async def receive_text_col_name(col_name: TextColumnName):
         result.data = {"text_column_name": data.text_col_name}
 
     return result
+
+
+# https://spacy.io/api/docbin
+# https://github.com/eric-sclafani/langviz/tree/app-restructure/src/langviz/data_loader
