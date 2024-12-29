@@ -4,9 +4,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpEventType } from '@angular/common/http';
 import { finalize, Subscription } from 'rxjs';
 
-import { PythonApiService } from '../../services/python-api.service';
+
 import { ProgressSpinnerComponent } from '../progress-spinner/progress-spinner.component';
 import DynamicResult from '../../models/dynamicResult';
+import { FileUploadService } from '../../services/file-upload.service';
 
 
 @Component({
@@ -27,7 +28,7 @@ export class FileUploadComponent {
     fileUploadSub: Subscription | null;
     fileForm = new FormData();
 
-    constructor(private _pythonApi: PythonApiService) { }
+    constructor(private _fileUpload: FileUploadService) { }
 
     onFileSelected(event: any): void {
         const file: File = event.target.files[0];
@@ -51,15 +52,11 @@ export class FileUploadComponent {
         this.reset();
     }
 
-    private sendTextColName(): void {
-        this._pythonApi.sendTextColName(this.textColumnName).subscribe((data) => {
-            console.log(data)
-        })
-    }
+   
 
     private initFormSubscriptions(): void {
 
-        const upload$ = this._pythonApi.sendFile(this.fileForm).pipe(
+        const upload$ = this._fileUpload.sendFile(this.fileForm).pipe(
             finalize(() => this.reset())
         );
 
@@ -71,7 +68,6 @@ export class FileUploadComponent {
 
             if (event.type == HttpEventType.Response) {
                 this.fileUploadResponse = event.body as DynamicResult
-                this.sendTextColName();
                 console.log(this.fileUploadResponse)
             }
         })

@@ -1,0 +1,56 @@
+
+
+#dashboard-wrapper {
+    display:flex
+}
+
+
+
+// Doc list styles
+#doc-list-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#doc-list {
+    padding: 10px;
+    margin: 0 0 0 10px;
+    gap:6px;
+    overflow-y: scroll;
+    border:solid black;
+    height: 70vh;
+    max-width: 230px;
+    border-radius: 15px;
+}
+
+.doc-item {
+    list-style: none;
+    border:solid black;
+    border-radius: 10px;
+    font-size:1.3rem;
+    padding:5px;
+
+    &:hover {
+        background-color:#e3f9ff;
+    }
+
+    &:active{
+        background-color: lightgray;
+    }
+
+}
+
+.doc-text {
+    font-size: .9rem;
+}
+
+.flex-col {
+    display: flex;
+    flex-direction: column;
+}
+
+
+
+// Doc details wrapper
+

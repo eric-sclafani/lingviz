@@ -10,6 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class ProgressSpinnerComponent {
 
-    progressValue = input.required<number | null>();
+    progressValue = input<number | null>();
 
 }

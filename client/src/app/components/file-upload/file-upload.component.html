@@ -9,7 +9,6 @@
         hidden>
 
     <div id="file-upload">
-
         
         <button id="upload-btn" (click)="fileUpload.click()">
             <mat-icon>upload</mat-icon>
@@ -21,9 +20,10 @@
     </div>
 
     <input
-        class="text-col-input"
+        id="text-col-input"
         type="text"
         placeholder="Text field name"
+        spellcheck="false"
         [(ngModel)]="textColumnName">
 
     <button type="button" id="submit-btn" (click)="onSubmit($event)"> Submit </button>

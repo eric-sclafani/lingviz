@@ -26,6 +26,21 @@
     }
 }
 
+
+#text-col-input {
+    padding:15px;
+    border:solid 1px;
+    border-radius:4px;
+    transition: all 0.5s;
+    transition-property: border-radius, box-shadow;
+
+    &:focus {
+        outline:none;
+        border-radius: 30px;
+        box-shadow: 4px 4px 5px rgba(0, 0, 0, 0.4);
+    }
+}
+
 #submit-btn {
     background-color: white;
     border: outset .5px;

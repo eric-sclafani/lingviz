@@ -40,22 +40,5 @@ async def receive_file_upload(file: UploadFile):
     return result
 
 
-@router.post("/text_col_name/")
-async def receive_text_col_name(col_name: TextColumnName):
-
-    result = DynamicResult()
-
-    if data.df is not None and col_name.name not in data.df.columns:
-        result.succeed = False
-        result.message = "Provided text column not found in dataset"
-    else:
-        data.text_col_name = col_name.name
-        result.succeed = True
-        result.message = "Text column received"
-        result.data = {"text_column_name": data.text_col_name}
-
-    return result
-
-
 # https://spacy.io/api/docbin
 # https://github.com/eric-sclafani/langviz/tree/app-restructure/src/langviz/data_loader

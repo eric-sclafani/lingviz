@@ -1,0 +1,22 @@
+<section id="dashboard-wrapper">
+
+    <div id="doc-list-wrapper" class="flex-col">
+
+        <h3>Documents</h3>
+
+        <ul id="doc-list" class="flex-col">
+            @for(doc of testDocs(); track $index){
+            <li class="doc-item">
+                <div class="doc-text">{{displayDocText(doc.text, 20)}}</div>
+            </li>
+            }
+        </ul>
+    </div>  
+
+    <div id="doc-details-wrapper">
+        
+    </div>
+
+
+
+</section>
