@@ -48,6 +48,8 @@ export class FileUploadComponent {
             //this.initFormSubscriptions();
         }
         catch (error) {
+
+            // TODO: make a snackbar service to show this to user
             throw Error(`Validation error: ${error}`)
         }
 
