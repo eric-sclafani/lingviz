@@ -5,7 +5,6 @@
         (change)="onFileSelected($event)"
         [accept]="acceptedFileTypes"
         #fileUpload
-        required
         hidden>
 
     <div id="file-upload">
@@ -17,24 +16,33 @@
         
         <em>{{ fileName || "No file chosen."}}</em>
 
+        <!-- Add "Remove file" button that clears the chosen file -->
+
     </div>
 
     <input
         id="text-col-input"
         type="text"
+        name="textFieldName"
         placeholder="Text field name"
         spellcheck="false"
-        [(ngModel)]="textColumnName">
+        [(ngModel)]="textFieldName">
 
-    <button type="button" id="submit-btn" (click)="onSubmit($event)"> Submit </button>
-
+    <button 
+        type="button" 
+        id="submit-btn" 
+        [disabled]="!formIsValid()"
+        (click)="onSubmit($event)"
+        [title]="!formIsValid() ? 'Form fields required' : ''"> 
+        Submit
+    </button>
+    
+    @if(fileUploadProgress != null){
+        <mat-icon class="cancel-upload"
+            (click)="cancelUpload()">delete_forever
+        </mat-icon>
+        
+        <progress-spinner [progressValue]="fileUploadProgress"></progress-spinner>
+    }
 </div>
 
-@if(fileUploadProgress != null){
-    <mat-icon class="cancel-upload"
-    (click)="cancelUpload()">delete_forever
-</mat-icon>
-
-<progress-spinner [progressValue]="fileUploadProgress"></progress-spinner>
-
-}

@@ -7,7 +7,7 @@ import { finalize, Subscription } from 'rxjs';
 
 import { ProgressSpinnerComponent } from '../progress-spinner/progress-spinner.component';
 import DynamicResult from '../../models/dynamicResult';
-import { FileUploadService } from '../../services/file-upload.service';
+import { PythonApiService } from '../../services/python-api.service';
 
 
 @Component({
@@ -20,29 +20,37 @@ import { FileUploadService } from '../../services/file-upload.service';
 export class FileUploadComponent {
 
     fileName = '';
-    textColumnName = '';
-    acceptedFileTypes = '.csv,.tsv';
+    textFieldName = 'user_review';
 
+    // TODO: add tsv and json(lines) support
+    acceptedFileTypes = '.csv';
+
+    fileForm = new FormData();
+    fileReadyToUpload = false
     fileUploadResponse: DynamicResult;
     fileUploadProgress: number | null;
     fileUploadSub: Subscription | null;
-    fileForm = new FormData();
 
-    constructor(private _fileUpload: FileUploadService) { }
+    constructor(private _pythonApi: PythonApiService) { }
 
     onFileSelected(event: any): void {
         const file: File = event.target.files[0];
-        if (file) {
-            this.fileName = file.name;
-            this.fileForm.append('file', file);
-        }
+        this.fileName = file.name;
+        this.fileForm.append('file', file);
     }
 
-    onSubmit(event: Event): void {
-        if (this.fileName != '') {
-            event.stopPropagation();
-            this.initFormSubscriptions();
+
+    async onSubmit(event: Event): Promise<void> {
+        event.preventDefault();
+        try {
+            const file = this.fileForm.get('file') as File;
+            await this.validateFile(file);
+            //this.initFormSubscriptions();
         }
+        catch (error) {
+            throw Error(`Validation error: ${error}`)
+        }
+
 
     }
 
@@ -52,11 +60,16 @@ export class FileUploadComponent {
         this.reset();
     }
 
-   
+    formIsValid(): boolean {
+        return this.fileName != ''
+            && this.textFieldName != ''
+    }
+
+
 
     private initFormSubscriptions(): void {
 
-        const upload$ = this._fileUpload.sendFile(this.fileForm).pipe(
+        const upload$ = this._pythonApi.sendFileForProcessing(this.fileForm).pipe(
             finalize(() => this.reset())
         );
 
@@ -76,6 +89,38 @@ export class FileUploadComponent {
     private reset(): void {
         this.fileUploadProgress = null;
         this.fileUploadSub = null;
+    }
+
+    private async validateFile(file: File): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+
+            const reader = new FileReader();
+
+            reader.onload = (event) => {
+                const csvContent = event.target?.result as string;
+                const lines = csvContent?.split('\n');
+
+                if (lines.length === 0) {
+                    reject('CSV file is empty');
+                }
+
+                const headers = lines[0].trim().split(',');
+                if (headers.includes(this.textFieldName)) {
+                    resolve(`Text field '${this.textFieldName}' successfully found.`);
+                }
+                else {
+                    reject(`Text field '${this.textFieldName}' not found.`);
+                }
+
+            };
+
+            reader.onerror = function (error) {
+                reject(error);
+            };
+
+            reader.readAsText(file);
+
+        })
     }
 
 
