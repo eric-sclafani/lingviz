@@ -17,7 +17,7 @@ import { PythonApiService } from '../../services/python-api.service';
 })
 export class FileUploadComponent {
     fileName = '';
-    textFieldName = 'message';
+    textFieldName = 'user_review';
 
     // TODO: add tsv and json(lines) support
     acceptedFileTypes = '.csv';
@@ -48,6 +48,8 @@ export class FileUploadComponent {
             throw Error(`Validation error: ${error}`);
         }
     }
+
+    // TODO: add remove file button
 
     cancelUpload(): void {
         this.fileUploadSub?.unsubscribe();

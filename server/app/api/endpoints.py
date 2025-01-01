@@ -1,4 +1,4 @@
-from fastapi import APIRouter, File, Form, UploadFile
+from fastapi import APIRouter, Form, UploadFile
 from loguru import logger
 import polars as pl
 
@@ -12,10 +12,11 @@ class DataWrapper:
 
     def __init__(self):
         self.df: pl.DataFrame | None = None
-        self.df_is_loaded = self.df != None
-        self.text_col_name: str = ""
+        self.text_field_name: str = ""
 
 
+# https://spacy.io/api/docbin
+# https://github.com/eric-sclafani/langviz/tree/app-restructure/src/langviz/data_loader
 data = DataWrapper()
 
 
@@ -24,24 +25,34 @@ async def receive_file_upload(file: UploadFile, text_field_name: str = Form(...)
     result = DynamicResult()
     try:
         contents = await file.read()
-        data.df = pl.read_csv(contents)
+        df = pl.read_csv(contents)
+        validate_file_upload(df, text_field_name)
 
-        data.df_is_loaded = True
+        data.df = df
+        data.text_field_name = text_field_name
 
-        logger.debug(
-            f"\n~~~~~~~~\nFile upload successful.\nFile name: {file.filename}\nDF Shape: {data.df.shape}\nText field name:{text_field_name}\n~~~~~~~~"
-        )
-    except Exception:
+        result.succeed = True
+        result.message = "File uploaded successfully"
+
+    except Exception as e:
         result.succeed = False
-        result.message = "There was an error reading uploaded file"
+        result.message = f"Error reading file: {str(e)}"
+
     finally:
         await file.close()
-
-    result.succeed = True
-    result.message = "File uploaded successfully"
 
     return result
 
 
-# https://spacy.io/api/docbin
-# https://github.com/eric-sclafani/langviz/tree/app-restructure/src/langviz/data_loader
+def validate_file_upload(df: pl.DataFrame, text_field_name: str) -> bool:
+
+    headers = df.columns
+    if text_field_name not in headers:
+        raise ValueError(
+            f"Text field '{text_field_name}' not found in provided dataset"
+        )
+
+    if df.shape[0] == 0:
+        raise ValueError("Provided dataset is empty!")
+
+    return True
