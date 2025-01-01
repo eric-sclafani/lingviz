@@ -5,6 +5,8 @@
             mode="determinate"
             [value]="progressValue()">
         </mat-progress-spinner>
+
+        {{ progressValue() }} out of 100
     }
     @else {
         <mat-progress-spinner
