@@ -4,29 +4,26 @@ import { MatIconModule } from '@angular/material/icon';
 import { HttpEventType } from '@angular/common/http';
 import { finalize, Subscription } from 'rxjs';
 
-
 import { ProgressSpinnerComponent } from '../progress-spinner/progress-spinner.component';
 import DynamicResult from '../../models/dynamicResult';
 import { PythonApiService } from '../../services/python-api.service';
-
 
 @Component({
     selector: 'file-upload',
     imports: [MatIconModule, FormsModule, ProgressSpinnerComponent],
     standalone: true,
     templateUrl: './file-upload.component.html',
-    styleUrl: './file-upload.component.scss'
+    styleUrl: './file-upload.component.scss',
 })
 export class FileUploadComponent {
-
     fileName = '';
-    textFieldName = 'user_review';
+    textFieldName = 'message';
 
     // TODO: add tsv and json(lines) support
     acceptedFileTypes = '.csv';
 
+    file:File;
     fileForm = new FormData();
-    fileReadyToUpload = false
     fileUploadResponse: DynamicResult;
     fileUploadProgress: number | null;
     fileUploadSub: Subscription | null;
@@ -35,95 +32,93 @@ export class FileUploadComponent {
 
     onFileSelected(event: any): void {
         const file: File = event.target.files[0];
+        this.file = file;
         this.fileName = file.name;
-        this.fileForm.append('file', file);
     }
 
-
+    // TODO: move file validation to backend (reason: FileReader file size limit)
     async onSubmit(event: Event): Promise<void> {
         event.preventDefault();
         try {
-            const file = this.fileForm.get('file') as File;
-            await this.validateFile(file);
-            //this.initFormSubscriptions();
+            this.setFormData();
+            this.initFormSubscriptions();
+
+        } catch (error) {
+            // TODO: make a snackbar service to show thsis to user
+            throw Error(`Validation error: ${error}`);
         }
-        catch (error) {
-
-            // TODO: make a snackbar service to show this to user
-            throw Error(`Validation error: ${error}`)
-        }
-
-
     }
 
     cancelUpload(): void {
         this.fileUploadSub?.unsubscribe();
         this.fileName = '';
-        this.reset();
+        this.resetUpload();
     }
 
     formIsValid(): boolean {
-        return this.fileName != ''
-            && this.textFieldName != ''
+        return this.fileName != '' && this.textFieldName != '';
     }
-
 
 
     private initFormSubscriptions(): void {
+        const upload$ = this._pythonApi
+            .sendFileToPython(this.fileForm)
+            .pipe(finalize(() => this.resetUpload()));
 
-        const upload$ = this._pythonApi.sendFileForProcessing(this.fileForm).pipe(
-            finalize(() => this.reset())
-        );
-
-        this.fileUploadSub = upload$.subscribe(event => {
-
+        this.fileUploadSub = upload$.subscribe((event) => {
             if (event.type == HttpEventType.UploadProgress && event.total) {
-                this.fileUploadProgress = Math.round(100 * (event.loaded / event.total));
+                this.fileUploadProgress = Math.round(
+                    100 * (event.loaded / event.total)
+                );
             }
 
             if (event.type == HttpEventType.Response) {
-                this.fileUploadResponse = event.body as DynamicResult
-                console.log(this.fileUploadResponse)
+                this.fileUploadResponse = event.body as DynamicResult;
+                console.log(this.fileUploadResponse);
             }
-        })
+        });
     }
 
-    private reset(): void {
+    private setFormData():void {
+        this.fileForm = new FormData();
+        this.fileForm.append('file', this.file);
+        this.fileForm.append('text_field_name', this.textFieldName);
+    }
+
+    private resetUpload(): void {
         this.fileUploadProgress = null;
         this.fileUploadSub = null;
     }
 
-    private async validateFile(file: File): Promise<string> {
-        return new Promise<string>((resolve, reject) => {
+    // private async validateFile(file: File): Promise<string> {
+    //     return new Promise<string>((resolve, reject) => {
+    //         const reader = new FileReader();
 
-            const reader = new FileReader();
+    //         reader.onload = (event) => {
+    //             const csvContent = event.target?.result as string;
+    //             const lines = csvContent?.split('\n');
 
-            reader.onload = (event) => {
-                const csvContent = event.target?.result as string;
-                const lines = csvContent?.split('\n');
+    //             if (lines.length === 0) {
+    //                 reject('CSV file is empty');
+    //             }
 
-                if (lines.length === 0) {
-                    reject('CSV file is empty');
-                }
-
-                const headers = lines[0].trim().split(',');
-                if (headers.includes(this.textFieldName)) {
-                    resolve(`Text field '${this.textFieldName}' successfully found.`);
-                }
-                else {
-                    reject(`Text field '${this.textFieldName}' not found.`);
-                }
-
-            };
-
-            reader.onerror = function (error) {
-                reject(error);
-            };
-
-            reader.readAsText(file);
-
-        })
-    }
+    //             const headers = lines[0].trim().split(',');
+    //             if (headers.includes(this.textFieldName)) {
+    //                 resolve(
+    //                     `Text field '${this.textFieldName}' successfully found.`
+    //                 );
+    //             } else {
+    //                 reject(
+    //                     `Text field '${this.textFieldName}' not found in uploaded dataset.`
+    //                 );
+    //             }
+    //         };
 
 
+    //         reader.onerror = () => reject(reader.error);
+
+            
+    //         reader.readAsText(file);
+    //     });
+    // }
 }
