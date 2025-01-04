@@ -3,6 +3,8 @@ from loguru import logger
 import polars as pl
 
 from schemas.dynamic_result import DynamicResult
+from schemas.corpus import Corpus
+import services.processing as processing
 
 router = APIRouter(prefix="/api")
 
@@ -56,3 +58,15 @@ def validate_file_upload(df: pl.DataFrame, text_field_name: str) -> bool:
         raise ValueError("Provided dataset is empty!")
 
     return True
+
+
+@router.get("/corpus_data/")
+async def create_corpus():
+    df = pl.read_csv("../data/toy_user_reviews.csv")
+    text_data = df["user_review"]
+    pipe = processing.create_nlp_pipe("en_core_web_sm", text_data)
+    if pipe:
+        pass
+
+    # TODO: step 1 = implement simple corpus calculations
+    return "hello"
