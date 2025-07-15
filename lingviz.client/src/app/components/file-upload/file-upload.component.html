@@ -1,0 +1,47 @@
+<input
+    type="file"
+    class="file-input"
+    multiple
+    (change)="onFileSelected($event)"
+    #fileUpload
+/>
+
+<div class="file-upload-wrapper">
+    <div
+        class="file-upload"
+        id="drop-zone"
+        appFileDrop
+        (filesDropped)="onFileDrop($event)"
+    >
+        <mat-icon class="upload-icon">download</mat-icon>
+        <div class="choose-file-wrapper">
+            <div>
+                <span class="choose-file" (click)="fileUpload.click()"
+                    >Choose a file</span
+                >
+                or drag it here
+            </div>
+            @if (progressInfos.length == 0) {
+                <em>No files uploaded</em>
+            } @else {
+                <div class="uploaded-files-wrapper">
+                    @for (info of progressInfos; track $index) {
+                        <div class="uploaded-file">
+                            {{ info.fileName }} -
+
+                            @if (info.value == 100) {
+                                <mat-icon>check</mat-icon>
+                            } @else {
+                                <mat-progress-spinner
+                                    mode="determinate"
+                                    diameter="20"
+                                    [value]="info.value"
+                                ></mat-progress-spinner>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+        </div>
+    </div>
+</div>
