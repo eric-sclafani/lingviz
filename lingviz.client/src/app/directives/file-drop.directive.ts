@@ -4,7 +4,7 @@ import { Directive, ElementRef, HostListener, output } from '@angular/core';
     selector: '[appFileDrop]',
 })
 export class FileDropDirective {
-    filesDropped = output<FileList>();
+    fileDropped = output<File>();
 
     constructor(private el: ElementRef) {}
 
@@ -14,7 +14,6 @@ export class FileDropDirective {
         event.dataTransfer!.dropEffect = 'copy';
 
         this.setDraggingState();
-
     }
 
     @HostListener('dragleave', ['$event']) onDragLeave(event: DragEvent) {
@@ -31,9 +30,9 @@ export class FileDropDirective {
 
         this.setInitialState();
 
-        const files = event.dataTransfer?.files;
+        const files = event.dataTransfer?.files[0];
         if (files) {
-            this.filesDropped.emit(files);
+            this.fileDropped.emit(files);
         }
     }
 

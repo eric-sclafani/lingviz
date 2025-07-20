@@ -1,9 +1,9 @@
-import { Component, inject, OnInit } from '@angular/core';
-import { FileUploadComponent } from './components/file-upload/file-upload.component';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
     selector: 'app-root',
-    imports: [FileUploadComponent],
+    imports: [RouterOutlet],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
 })

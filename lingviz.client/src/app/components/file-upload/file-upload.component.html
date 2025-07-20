@@ -11,7 +11,7 @@
         class="file-upload"
         id="drop-zone"
         appFileDrop
-        (filesDropped)="onFileDrop($event)"
+        (fileDropped)="onFileDrop($event)"
     >
         <mat-icon class="upload-icon">download</mat-icon>
         <div class="choose-file-wrapper">
@@ -21,27 +21,71 @@
                 >
                 or drag it here
             </div>
-            @if (progressInfos.length == 0) {
+            <!-- @if (progressInfos.length == 0) {
                 <em>No files uploaded</em>
             } @else {
                 <div class="uploaded-files-wrapper">
                     @for (info of progressInfos; track $index) {
-                        <div class="uploaded-file">
-                            {{ info.fileName }} -
+                <div class="uploaded-file">
+                    <div class="file-name">{{ info.fileName }}</div>
 
-                            @if (info.value == 100) {
-                                <mat-icon>check</mat-icon>
-                            } @else {
-                                <mat-progress-spinner
-                                    mode="determinate"
-                                    diameter="20"
-                                    [value]="info.value"
-                                ></mat-progress-spinner>
-                            }
-                        </div>
+                    @if (info.value == 100) {
+                    <mat-icon style="color: green">check</mat-icon>
+                    } @else {
+                    <mat-progress-spinner
+                        mode="determinate"
+                        diameter="20"
+                        [value]="info.value"
+                    ></mat-progress-spinner>
                     }
                 </div>
-            }
+                }
+
+                   
+                </div>
+            } -->
+
+            <div class="uploaded-files-wrapper">
+                @if (selectedFile) {
+                    <form
+                        [formGroup]="datasetForm"
+                        class="dataset-form"
+                        (submit)="onSubmit()"
+                    >
+                        <div>{{ selectedFile.name }}</div>
+                        <mat-form-field
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                        >
+                            <mat-label>Unique ID Column Name</mat-label>
+                            <input
+                                matInput
+                                placeholder="DocID"
+                                formControlName="idColName"
+                            />
+                        </mat-form-field>
+                        <mat-form-field
+                            appearance="outline"
+                            subscriptSizing="dynamic"
+                        >
+                            <mat-label>Text Column Name</mat-label>
+                            <input
+                                matInput
+                                placeholder="Text"
+                                formControlName="textColName"
+                            />
+                        </mat-form-field>
+
+                        <button
+                            mat-flat-button
+                            type="submit"
+                            [disabled]="datasetForm.invalid"
+                        >
+                            Upload
+                        </button>
+                    </form>
+                }
+            </div>
         </div>
     </div>
 </div>
