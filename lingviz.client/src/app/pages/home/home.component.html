@@ -1,8 +1,20 @@
-<mat-tab-group>
-    <mat-tab label="Upload">
+<mat-tab-group [selectedIndex]="selectedIndex" animationDuration="0">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 10px">assignment_add</mat-icon>
+            Upload
+        </ng-template>
         <app-file-upload
-            (outputDataset)="onDatasetUpload($event)"
+            (outputDataset)="onDatasetClientUpload($event)"
+            [progressInfo]="progressInfo"
+            [fileUploadMsg]="fileUploadMsg"
         ></app-file-upload>
     </mat-tab>
-    <mat-tab label="View Data"> Content 2 </mat-tab>
+    <mat-tab [disabled]="!fileUploaded">
+        <ng-template mat-tab-label>
+            <mat-icon style="margin-right: 10px">chart_data</mat-icon>
+            View Documents
+        </ng-template>
+        <app-document-list [documents]="testDocs()"></app-document-list>
+    </mat-tab>
 </mat-tab-group>

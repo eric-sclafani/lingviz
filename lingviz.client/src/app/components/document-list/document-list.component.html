@@ -1,1 +1,13 @@
-<p>document-list works!</p>
+<div class="document-list-wrapper">
+    <h2>My Documents</h2>
+    <div class="documents-wrapper">
+        @for (doc of documents(); track doc.id) {
+            <div class="document">
+                <div>
+                    <span class="id">{{ doc.id }}</span>
+                </div>
+                <div class="doc-preview">{{ doc.text.slice(0, 35) }}...</div>
+            </div>
+        }
+    </div>
+</div>

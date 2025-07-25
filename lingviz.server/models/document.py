@@ -34,6 +34,10 @@ class Document:
     @cached_property
     def sentences(self) -> List[Span]:
         return list(self.spacy_doc.sents)
+    
+    @cached_property
+    def lemmas(self) -> List[str]:
+        return [token.lemma_ for token in self.spacy_doc]
 
     @cached_property
     def named_entities(self) -> List[NamedEntity]:

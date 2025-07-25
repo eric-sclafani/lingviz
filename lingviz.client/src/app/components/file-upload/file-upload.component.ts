@@ -1,4 +1,11 @@
-import { Component, inject, OnDestroy, OnInit, output } from '@angular/core';
+import {
+    Component,
+    inject,
+    input,
+    OnDestroy,
+    OnInit,
+    output,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule, MatIconRegistry } from '@angular/material/icon';
@@ -35,11 +42,10 @@ export class FileUploadComponent implements OnInit, OnDestroy {
     selectedFile: File;
     datasetForm: FormGroup<DatasetForm>;
 
-    outputDataset = output<Dataset>();
+    progressInfo = input.required<{ value: number; fileName: string }>();
+    fileUploadMsg = input.required<string>();
 
-    // progressInfos and messages will be input into component
-    // progressInfos: { value: number; fileName: string }[] = [];
-    // messages: string[] = [];
+    outputDataset = output<Dataset>();
 
     constructor(iconRegistry: MatIconRegistry) {
         iconRegistry.setDefaultFontSetClass('material-symbols-outlined');
@@ -77,8 +83,8 @@ export class FileUploadComponent implements OnInit, OnDestroy {
 
     private initForm() {
         this.datasetForm = new FormGroup<DatasetForm>({
-            idColName: new FormControl('', [Validators.required]),
-            textColName: new FormControl('', [Validators.required]),
+            idColName: new FormControl('id', [Validators.required]),
+            textColName: new FormControl('text', [Validators.required]),
         });
     }
 
